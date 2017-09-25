@@ -8,7 +8,7 @@ import pl.adamklimko.zeroseg.model.Settings;
 import pl.adamklimko.zeroseg.service.SettingsService;
 
 @RestController
-@RequestMapping("/raspberry/settings")
+@RequestMapping("/settings")
 public class SettingsController {
     private final SettingsService ss;
 

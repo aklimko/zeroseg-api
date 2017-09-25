@@ -11,7 +11,7 @@ import pl.adamklimko.zeroseg.service.MessageService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/raspberry/messages")
+@RequestMapping("/messages")
 public class MessageController {
     private final MessageService ms;
 

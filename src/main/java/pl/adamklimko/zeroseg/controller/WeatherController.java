@@ -8,7 +8,7 @@ import pl.adamklimko.zeroseg.model.Weather;
 import pl.adamklimko.zeroseg.service.WeatherService;
 
 @RestController
-@RequestMapping("/raspberry/weather")
+@RequestMapping("/weather")
 public class WeatherController {
     private final WeatherService ws;
 
