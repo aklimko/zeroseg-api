@@ -9,7 +9,7 @@ import javax.persistence.Id;
 public class MessageRead {
     @Id @JsonIgnore
     private String name;
-    private Integer latestReadId;
+    private Integer lastReadId;
 
     public MessageRead() {
         this.name = "last_read";
@@ -23,11 +23,11 @@ public class MessageRead {
         this.name = name;
     }
 
-    public Integer getLatestReadId() {
-        return latestReadId;
+    public Integer getLastReadId() {
+        return lastReadId;
     }
 
-    public void setLatestReadId(Integer latestReadId) {
-        this.latestReadId = latestReadId;
+    public void setLastReadId(Integer lastReadId) {
+        this.lastReadId = lastReadId;
     }
 }

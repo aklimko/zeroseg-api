@@ -7,6 +7,6 @@ import pl.adamklimko.zeroseg.model.Settings;
 
 @Repository
 public interface SettingsRepository extends CrudRepository<Settings, Integer> {
-    @Query(value = "SELECT * FROM settings", nativeQuery = true)
+    @Query(value = "SELECT * FROM settings LIMIT 1", nativeQuery = true)
     Settings findSettings();
 }

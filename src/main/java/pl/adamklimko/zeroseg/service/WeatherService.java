@@ -13,7 +13,7 @@ public class WeatherService {
     @Autowired
     public WeatherService(WeatherRepository weatherRepository){
         this.weatherRepository = weatherRepository;
-        weather = weatherRepository.findWeather();
+        this.weather = weatherRepository.findWeather();
     }
 
     public Weather getWeather() {
