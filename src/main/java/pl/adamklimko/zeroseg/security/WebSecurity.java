@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    public static final String IP = "/ip";
+    private static final String IP = "/ip";
 
     public WebSecurity(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDetailsService = userDetailsService;
