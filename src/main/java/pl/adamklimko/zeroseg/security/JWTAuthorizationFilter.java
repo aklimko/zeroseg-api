@@ -1,5 +1,6 @@
 package pl.adamklimko.zeroseg.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,14 +20,14 @@ import static pl.adamklimko.zeroseg.security.SecurityUtils.TOKEN_PREFIX;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-    public JWTAuthorizationFilter(AuthenticationManager authManager) {
+    JWTAuthorizationFilter(AuthenticationManager authManager) {
         super(authManager);
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req,
                                     HttpServletResponse res,
-                                    FilterChain chain) throws IOException, ServletException {
+                                    FilterChain chain) throws IOException, ServletException, ExpiredJwtException {
         String header = req.getHeader(HEADER_STRING);
 
         if (header == null || !header.startsWith(TOKEN_PREFIX)) {
@@ -34,7 +35,13 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
 
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+        UsernamePasswordAuthenticationToken authentication;
+        try {
+            authentication = getAuthentication(req);
+        } catch (ExpiredJwtException e) {
+            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Token expired");
+            return;
+        }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
