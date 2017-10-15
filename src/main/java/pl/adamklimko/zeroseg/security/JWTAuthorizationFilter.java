@@ -2,6 +2,7 @@ package pl.adamklimko.zeroseg.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +40,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         try {
             authentication = getAuthentication(req);
         } catch (ExpiredJwtException e) {
-            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Token expired");
+            res.setContentType("application/json");
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
+            return;
+        } catch (SignatureException e) {
+            res.setContentType("application/json");
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wrong token signature");
             return;
         }
 
