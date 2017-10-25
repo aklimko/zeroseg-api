@@ -1,6 +1,5 @@
 package pl.adamklimko.zeroseg.security;
 
-import pl.adamklimko.zeroseg.model.AppUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,24 +9,25 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import pl.adamklimko.zeroseg.model.AppUser;
+import pl.adamklimko.zeroseg.model.Token;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static pl.adamklimko.zeroseg.security.SecurityUtils.EXPIRATION_TIME;
-import static pl.adamklimko.zeroseg.security.SecurityUtils.HEADER_STRING;
-import static pl.adamklimko.zeroseg.security.SecurityUtils.SECRET;
-import static pl.adamklimko.zeroseg.security.SecurityUtils.TOKEN_PREFIX;
+import static pl.adamklimko.zeroseg.security.SecurityUtils.*;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+    JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
@@ -54,12 +54,22 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse res,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
+        Date expirationDate = getExpirationDate(EXPIRATION_TIME);
+
         String token = Jwts.builder()
                 .setSubject(((User) auth.getPrincipal()).getUsername())
-                .setExpiration(getExpirationDate(EXPIRATION_TIME))
+                .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, SECRET.getBytes())
                 .compact();
-        res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
+
+        Token tokenResponse = new Token();
+        tokenResponse.setToken(TOKEN_PREFIX + token);
+        tokenResponse.setExpirationDate(LocalDateTime.ofInstant(expirationDate.toInstant(), ZoneId.systemDefault()).toString());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String responseBody = objectMapper.writeValueAsString(tokenResponse);
+        res.setContentType("application/json");
+        res.getWriter().write(responseBody);
     }
 
     private Date getExpirationDate(long time) {
