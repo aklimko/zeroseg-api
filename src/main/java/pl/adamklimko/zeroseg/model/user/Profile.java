@@ -1,11 +1,14 @@
 package pl.adamklimko.zeroseg.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Integer id;
     private String fullName;
     private String facebookId;
