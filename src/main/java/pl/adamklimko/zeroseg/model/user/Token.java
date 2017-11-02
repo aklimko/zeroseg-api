@@ -1,4 +1,4 @@
-package pl.adamklimko.zeroseg.model;
+package pl.adamklimko.zeroseg.model.user;
 
 public class Token {
     private String token;

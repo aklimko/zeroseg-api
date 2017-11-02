@@ -6,15 +6,14 @@ import pl.adamklimko.zeroseg.config.patch.json.Patch;
 import pl.adamklimko.zeroseg.config.patch.json.PatchRequestBody;
 import pl.adamklimko.zeroseg.model.Settings;
 import pl.adamklimko.zeroseg.service.SettingsService;
-import pl.adamklimko.zeroseg.service.impl.SettingsServiceImpl;
 
 @RestController
 @RequestMapping("/settings")
 public class SettingsController {
-    private final SettingsServiceImpl ss;
+    private final SettingsService ss;
 
     @Autowired
-    public SettingsController(SettingsServiceImpl ss) {
+    public SettingsController(SettingsService ss) {
         this.ss = ss;
     }
 

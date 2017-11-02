@@ -1,6 +1,8 @@
 package pl.adamklimko.zeroseg.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import pl.adamklimko.zeroseg.config.patch.json.Patch;
 import pl.adamklimko.zeroseg.config.patch.json.PatchRequestBody;
@@ -19,6 +21,10 @@ public class WeatherController {
 
     @GetMapping()
     public Weather getWeather() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        System.out.println(authentication.getCredentials().toString());
+        System.out.println(authentication.getPrincipal().toString());
         return ws.getWeather();
     }
 

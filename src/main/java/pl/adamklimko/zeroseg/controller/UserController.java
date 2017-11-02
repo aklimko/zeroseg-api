@@ -1,28 +1,46 @@
 package pl.adamklimko.zeroseg.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import pl.adamklimko.zeroseg.model.AppUser;
-import pl.adamklimko.zeroseg.repository.AppUserRepository;
+import org.springframework.web.bind.annotation.*;
+import pl.adamklimko.zeroseg.config.patch.json.Patch;
+import pl.adamklimko.zeroseg.config.patch.json.PatchRequestBody;
+import pl.adamklimko.zeroseg.model.user.AppUser;
+import pl.adamklimko.zeroseg.model.user.Profile;
+import pl.adamklimko.zeroseg.service.AppUserService;
+import pl.adamklimko.zeroseg.service.ProfileService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
-    private AppUserRepository appUserRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AppUserService appUserService;
+    private final ProfileService profileService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserController(AppUserRepository appUserRepository,
-                          BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.appUserRepository = appUserRepository;
+    public UserController(AppUserService appUserService, ProfileService profileService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.appUserService = appUserService;
+        this.profileService = profileService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @PostMapping("/signup")
     public void signUp(@RequestBody AppUser user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        appUserRepository.save(user);
+        appUserService.save(user);
+    }
+
+    @PatchMapping("/profile")
+    @Patch(id = Integer.class, service = ProfileService.class)
+    public Profile patchProfile(@PatchRequestBody Profile profile) {
+        final AppUser user = appUserService.findByUsername(getUsernameFromContext());
+        if (user.getProfile() == null) {
+            user.setProfile(profile);
+        }
+        profileService.save(profile);
+        return profile;
+    }
+
+    private String getUsernameFromContext() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

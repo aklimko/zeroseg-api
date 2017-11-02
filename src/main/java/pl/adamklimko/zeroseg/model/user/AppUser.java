@@ -1,9 +1,8 @@
-package pl.adamklimko.zeroseg.model;
+package pl.adamklimko.zeroseg.model.user;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 @Entity
 public class AppUser {
@@ -11,6 +10,10 @@ public class AppUser {
     private int id;
     private String username;
     private String password;
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
 
     public int getId() {
         return id;
@@ -34,5 +37,13 @@ public class AppUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 }
