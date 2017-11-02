@@ -29,6 +29,11 @@ public class UserController {
         appUserService.save(user);
     }
 
+    @GetMapping("/profile")
+    public Profile getProfile() {
+        return appUserService.findByUsername(getUsernameFromContext()).getProfile();
+    }
+
     @PatchMapping("/profile")
     @Patch(id = Integer.class, service = ProfileService.class)
     public Profile patchProfile(@PatchRequestBody Profile profile) {
