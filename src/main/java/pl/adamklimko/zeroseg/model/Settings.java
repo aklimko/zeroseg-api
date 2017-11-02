@@ -1,5 +1,7 @@
 package pl.adamklimko.zeroseg.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +12,7 @@ import java.util.TreeMap;
 public class Settings {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Integer id;
     private Double waitTimeAfterClick;
     private Double displayRateClock;

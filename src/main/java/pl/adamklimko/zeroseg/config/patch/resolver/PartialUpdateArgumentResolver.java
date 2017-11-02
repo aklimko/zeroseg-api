@@ -28,8 +28,18 @@ import java.util.Map;
 @Component
 public class PartialUpdateArgumentResolver implements HandlerMethodArgumentResolver {
 
-    @Autowired ObjectMapper objectMapper;
-    @Autowired ApplicationContext context;
+    private ObjectMapper objectMapper;
+    private ApplicationContext context;
+
+    @Autowired
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    @Autowired
+    public void setContext(ApplicationContext applicationContext) {
+        this.context = applicationContext;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
