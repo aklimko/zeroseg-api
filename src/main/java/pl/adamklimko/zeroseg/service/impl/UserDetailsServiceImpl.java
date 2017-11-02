@@ -1,4 +1,4 @@
-package pl.adamklimko.zeroseg.service;
+package pl.adamklimko.zeroseg.service.impl;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

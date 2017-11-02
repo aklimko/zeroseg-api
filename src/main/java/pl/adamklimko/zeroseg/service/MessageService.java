@@ -1,48 +1,19 @@
 package pl.adamklimko.zeroseg.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import pl.adamklimko.zeroseg.model.MessageRead;
-import pl.adamklimko.zeroseg.repository.MessageReadRepository;
-import pl.adamklimko.zeroseg.repository.MessageRepository;
 import pl.adamklimko.zeroseg.model.Message;
+import pl.adamklimko.zeroseg.model.MessageRead;
 
-@Service
-public class MessageService {
-    private Message latest;
-    private MessageRead latestRead;
-    private final MessageRepository messageRepository;
-    private final MessageReadRepository messageReadRepository;
+import java.util.List;
 
-    @Autowired
-    public MessageService(MessageRepository messageRepository, MessageReadRepository messageReadRepository) {
-        this.messageRepository = messageRepository;
-        this.messageReadRepository = messageReadRepository;
-        this.latest = messageRepository.findLastMessage();
-        this.latestRead = messageReadRepository.getLastMessageRead();
-    }
+public interface MessageService {
 
-    public Message getLatest() {
-        return latest;
-    }
+    Message getLatest();
 
-    public void setLatest(Message latest) {
-        this.latest = latest;
-    }
+    MessageRead getLastRead();
 
-    public MessageRead getLatestRead() {
-        return latestRead;
-    }
+    void saveMessage(Message message);
 
-    public void setLatestRead(MessageRead latestRead) {
-        this.latestRead = latestRead;
-    }
+    void saveMessageRead(MessageRead latestRead);
 
-    public MessageRepository getMessageRepository() {
-        return messageRepository;
-    }
-
-    public MessageReadRepository getMessageReadRepository() {
-        return messageReadRepository;
-    }
+    List<Message> findMessagesNewerThanId(int id);
 }

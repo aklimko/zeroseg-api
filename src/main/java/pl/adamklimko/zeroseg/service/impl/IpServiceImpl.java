@@ -1,10 +1,10 @@
-package pl.adamklimko.zeroseg.service;
+package pl.adamklimko.zeroseg.service.impl;
 
 import org.springframework.stereotype.Service;
 import pl.adamklimko.zeroseg.model.Ip;
 
 @Service
-public class IpService {
+public class IpServiceImpl {
     private Ip ip;
 
     public Ip getIp() {

@@ -1,8 +1,6 @@
 package pl.adamklimko.zeroseg.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.adamklimko.zeroseg.model.Message;
 import pl.adamklimko.zeroseg.model.MessageRead;
@@ -21,32 +19,29 @@ public class MessageController {
     }
 
     @GetMapping("/latest")
-    public ResponseEntity<Message> getLastMessage() {
-        return new ResponseEntity<>(ms.getLatest(), HttpStatus.OK);
+    public Message getLastMessage() {
+        return ms.getLatest();
     }
 
     @GetMapping("/from/{id}")
-    public ResponseEntity<List<Message>> getLatestMessagesFromId(@PathVariable Integer id) {
-        List<Message> messages = ms.getMessageRepository().findMessagesNewerThanId(id);
-        return new ResponseEntity<>(messages, HttpStatus.OK);
+    public List<Message> getLatestMessagesFromId(@PathVariable Integer id) {
+        return ms.findMessagesNewerThanId(id);
     }
 
     @PostMapping()
-    public ResponseEntity<Message> addMessage(@RequestBody Message message) {
-        ms.getMessageRepository().save(message);
-        ms.setLatest(message);
-        return new ResponseEntity<>(message, HttpStatus.OK);
+    public Message addMessage(@RequestBody Message message) {
+        ms.saveMessage(message);
+        return message;
     }
 
     @GetMapping("/read")
-    public ResponseEntity<MessageRead> getLatestReadMessageId() {
-        return new ResponseEntity<>(ms.getLatestRead(), HttpStatus.OK);
+    public MessageRead getLatestReadMessageId() {
+        return ms.getLastRead();
     }
 
     @PutMapping("/read")
-    public ResponseEntity<MessageRead> updateLatestReadMessageId(@RequestBody MessageRead latestRead) {
-        ms.getMessageReadRepository().save(latestRead);
-        ms.setLatestRead(latestRead);
-        return new ResponseEntity<>(latestRead, HttpStatus.OK);
+    public MessageRead updateLatestReadMessageId(@RequestBody MessageRead latestRead) {
+        ms.saveMessageRead(latestRead);
+        return latestRead;
     }
 }

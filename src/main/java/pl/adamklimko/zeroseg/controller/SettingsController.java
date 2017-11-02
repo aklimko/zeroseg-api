@@ -1,31 +1,40 @@
 package pl.adamklimko.zeroseg.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.adamklimko.zeroseg.config.patch.json.Patch;
+import pl.adamklimko.zeroseg.config.patch.json.PatchRequestBody;
 import pl.adamklimko.zeroseg.model.Settings;
 import pl.adamklimko.zeroseg.service.SettingsService;
+import pl.adamklimko.zeroseg.service.impl.SettingsServiceImpl;
 
 @RestController
 @RequestMapping("/settings")
 public class SettingsController {
-    private final SettingsService ss;
+    private final SettingsServiceImpl ss;
 
     @Autowired
-    public SettingsController(SettingsService ss) {
+    public SettingsController(SettingsServiceImpl ss) {
         this.ss = ss;
     }
 
     @GetMapping()
-    public @ResponseBody ResponseEntity<Settings> getSettings() {
-        return new ResponseEntity<>(ss.getSettings(), HttpStatus.OK);
+    public Settings getSettings() {
+        return ss.getSettings();
     }
 
     @PutMapping()
-    public ResponseEntity<Settings> updateSettings(@RequestBody Settings settings) {
-        ss.getSettingsRepository().save(settings);
-        ss.setSettings(settings);
-        return new ResponseEntity<>(settings, HttpStatus.OK);
+    public Settings updateSettings(@RequestBody Settings settings) {
+        settings.setId(1);
+        ss.save(settings);
+        return settings;
+    }
+
+    @PatchMapping()
+    @Patch(id = Integer.class, service = SettingsService.class)
+    public Settings patchWeather(@PatchRequestBody Settings settings) {
+        settings.setId(1);
+        ss.save(settings);
+        return settings;
     }
 }

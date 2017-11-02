@@ -1,9 +1,9 @@
 package pl.adamklimko.zeroseg.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.adamklimko.zeroseg.config.patch.json.Patch;
+import pl.adamklimko.zeroseg.config.patch.json.PatchRequestBody;
 import pl.adamklimko.zeroseg.model.Weather;
 import pl.adamklimko.zeroseg.service.WeatherService;
 
@@ -18,17 +18,22 @@ public class WeatherController {
     }
 
     @GetMapping()
-    public @ResponseBody ResponseEntity<Weather> getWeather() {
-        return new ResponseEntity<>(ws.getWeather(), HttpStatus.OK);
+    public Weather getWeather() {
+        return ws.getWeather();
     }
 
     @PutMapping()
-    public ResponseEntity<Weather> updateWeather(@RequestBody Weather weather) {
-        Weather w = ws.getWeather();
-        w.setTemperature(weather.getTemperature());
-        w.setHumidity(weather.getHumidity());
-        w.setPressure(weather.getPressure());
-        ws.getWeatherRepository().save(w);
-        return new ResponseEntity<>(weather, HttpStatus.OK);
+    public Weather updateWeather(@RequestBody Weather weather) {
+        weather.setId(1);
+        ws.save(weather);
+        return weather;
+    }
+
+    @PatchMapping()
+    @Patch(id = Integer.class, service = WeatherService.class)
+    public Weather patchWeather(@PatchRequestBody Weather weather) {
+        weather.setId(1);
+        ws.save(weather);
+        return weather;
     }
 }
