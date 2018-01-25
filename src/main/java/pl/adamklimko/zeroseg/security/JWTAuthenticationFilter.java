@@ -54,7 +54,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse res,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
-        Date expirationDate = getExpirationDate(EXPIRATION_TIME);
+        Date expirationDate = getExpirationDate(EXPIRATION_TIME_SECONDS);
 
         String token = Jwts.builder()
                 .setSubject(((User) auth.getPrincipal()).getUsername())
