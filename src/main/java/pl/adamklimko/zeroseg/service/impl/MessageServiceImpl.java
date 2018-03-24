@@ -22,7 +22,7 @@ public class MessageServiceImpl implements MessageService {
         this.messageRepository = messageRepository;
         this.messageReadRepository = messageReadRepository;
         this.latest = messageRepository.findLastMessage();
-        this.lastRead = messageReadRepository.findOne("message_read");
+        this.lastRead = messageReadRepository.findOne("last_read");
     }
 
     public Message getLatest() {
